@@ -1,7 +1,6 @@
-package br.com.picpaychallenge.domain.user;
+package br.com.picpaychallenge.application.core.domain;
 
-import br.com.picpaychallenge.domain.user.dto.UserRequest;
-import br.com.picpaychallenge.domain.user.enums.UserType;
+import br.com.picpaychallenge.application.core.enums.UserType;
 
 import java.util.UUID;
 
@@ -26,18 +25,6 @@ public class User {
         this.userType = userType;
     }
 
-    public User(UserRequest userRequest) {
-        this.name = userRequest.getName();
-        this.document = userRequest.getDocument();
-        this.email = userRequest.getEmail();
-        this.password = userRequest.getPassword();
-        this.userType = userRequest.getUserType();
-    }
-
-    public UserRequest toUserRequest() {
-        return new UserRequest(this.name, this.document, this.email, this.password, this.userType);
-    }
-
     public UUID getId() {
         return id;
     }
@@ -60,5 +47,29 @@ public class User {
 
     public UserType getUserType() {
         return userType;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setDocument(String document) {
+        this.document = document;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUserType(UserType userType) {
+        this.userType = userType;
     }
 }

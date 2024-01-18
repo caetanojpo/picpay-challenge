@@ -1,4 +1,4 @@
-package br.com.picpaychallenge.utils.exceptions;
+package br.com.picpaychallenge.application.core.exception;
 
 public class UserException extends RuntimeException {
 
