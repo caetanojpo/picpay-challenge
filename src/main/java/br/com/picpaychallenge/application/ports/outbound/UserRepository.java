@@ -4,7 +4,8 @@ import br.com.picpaychallenge.application.core.domain.User;
 
 import java.util.List;
 
-public interface FindUserPort {
+public interface UserRepository {
+    User save(User user);
 
     List<User> findAll();
 }

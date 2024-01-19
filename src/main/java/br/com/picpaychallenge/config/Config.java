@@ -1,7 +1,8 @@
 package br.com.picpaychallenge.config;
 
-import br.com.picpaychallenge.adapter.outbound.service.CreateUserAdapter;
-import br.com.picpaychallenge.application.core.service.CreateUserService;
+import br.com.picpaychallenge.application.core.usecase.CreateUser;
+import br.com.picpaychallenge.application.ports.cryptography.EncryptPassword;
+import br.com.picpaychallenge.application.ports.outbound.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +10,8 @@ import org.springframework.context.annotation.Configuration;
 public class Config {
 
     @Bean
-    public CreateUserService createUserService(CreateUserAdapter createUserAdapter) {
-        return new CreateUserService(createUserAdapter);
+    public CreateUser createUserService(UserRepository repository, EncryptPassword encryptPassword) {
+        return new CreateUser(repository, encryptPassword);
     }
 
 }
