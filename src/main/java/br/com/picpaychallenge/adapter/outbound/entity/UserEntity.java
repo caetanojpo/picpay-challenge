@@ -1,10 +1,7 @@
 package br.com.picpaychallenge.adapter.outbound.entity;
 
 import br.com.picpaychallenge.application.core.enums.UserType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +23,7 @@ public class UserEntity {
     @Column(name = "id", nullable = false, updatable = false)
     private UUID id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
     @Column(name = "document", unique = true, nullable = false)
@@ -35,10 +32,11 @@ public class UserEntity {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "user_type")
+    @Column(name = "user_type", nullable = false)
+    @Enumerated(EnumType.STRING)
     private UserType userType;
 
 }

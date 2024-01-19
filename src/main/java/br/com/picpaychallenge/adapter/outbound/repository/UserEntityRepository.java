@@ -1,11 +1,10 @@
 package br.com.picpaychallenge.adapter.outbound.repository;
 
 import br.com.picpaychallenge.adapter.inbound.mapper.UserMapper;
-import br.com.picpaychallenge.adapter.outbound.cryptography.BCryptPassword;
+import br.com.picpaychallenge.adapter.outbound.cryptography.Argon2Password;
 import br.com.picpaychallenge.application.core.domain.User;
 import br.com.picpaychallenge.application.ports.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -15,14 +14,13 @@ import java.util.List;
 public class UserEntityRepository implements UserRepository {
 
     private final UserJpaRepository jpaRepository;
-    private final UserMapper userMapper;
-    private final BCryptPassword bCryptPassword;
+    private final Argon2Password bCryptPassword;
 
     @Override
     public User save(User user) {
         user.setPassword(bCryptPassword.encode(user.getPassword()));
-        var userEntity = userMapper.toUserEntity(user);
-        return userMapper.toUser(jpaRepository.save(userEntity));
+        var userEntity = UserMapper.INSTANCE.toUserEntity(user);
+        return UserMapper.INSTANCE.toUser(jpaRepository.save(userEntity));
     }
 
     @Override
