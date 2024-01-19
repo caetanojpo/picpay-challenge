@@ -6,18 +6,23 @@ import br.com.picpaychallenge.application.ports.outbound.UserRepository;
 
 public class CreateUser {
 
-    private final UserRepository repository;
+    private final UserRepository userRepository;
+    private final CreateWallet createWallet;
 
     private final EncryptPassword encryptPassword;
 
-    public CreateUser(UserRepository repository, EncryptPassword encryptPassword) {
-        this.repository = repository;
+    public CreateUser(UserRepository repository, CreateWallet createWallet, EncryptPassword encryptPassword) {
+        this.userRepository = repository;
+        this.createWallet = createWallet;
         this.encryptPassword = encryptPassword;
     }
 
     public User execute(User user) {
         user.setPassword(encryptPassword.encode(user.getPassword()));
-        return this.repository.save(user);
+        var createdUser = this.userRepository.save(user);
+        createWallet.execute(createdUser);
+        return createdUser;
+
     }
 
 }

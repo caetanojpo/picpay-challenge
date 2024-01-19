@@ -39,4 +39,7 @@ public class UserEntity {
     @Enumerated(EnumType.STRING)
     private UserType userType;
 
+    @OneToOne(cascade = CascadeType.ALL, mappedBy = "user")
+    private WalletEntity wallet;
+
 }

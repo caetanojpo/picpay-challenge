@@ -4,6 +4,7 @@ import br.com.picpaychallenge.application.core.domain.User;
 import br.com.picpaychallenge.application.ports.outbound.UserRepository;
 
 import java.util.List;
+import java.util.UUID;
 
 public class FindUser {
 
@@ -16,4 +17,6 @@ public class FindUser {
     public List<User> all() {
         return repository.findAll();
     }
+
+    public User byId(UUID id) { return repository.byId(id);}
 }
