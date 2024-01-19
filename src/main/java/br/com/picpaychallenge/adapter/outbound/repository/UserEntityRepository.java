@@ -18,7 +18,6 @@ public class UserEntityRepository implements UserRepository {
 
     @Override
     public User save(User user) {
-        user.setPassword(bCryptPassword.encode(user.getPassword()));
         var userEntity = UserMapper.INSTANCE.toUserEntity(user);
         return UserMapper.INSTANCE.toUser(jpaRepository.save(userEntity));
     }

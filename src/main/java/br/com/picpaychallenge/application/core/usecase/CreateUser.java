@@ -16,10 +16,8 @@ public class CreateUser {
     }
 
     public User execute(User user) {
+        user.setPassword(encryptPassword.encode(user.getPassword()));
         return this.repository.save(user);
     }
 
-    public String encrypt(String password) {
-        return encryptPassword.encode(password);
-    }
 }
