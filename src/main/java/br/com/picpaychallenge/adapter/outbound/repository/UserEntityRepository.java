@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 
 @Repository
 @RequiredArgsConstructor
@@ -25,5 +26,10 @@ public class UserEntityRepository implements UserRepository {
     @Override
     public List<User> findAll() {
         return null;
+    }
+
+    @Override
+    public User byId(UUID id) {
+        return UserMapper.INSTANCE.toUser(jpaRepository.findById(id));
     }
 }

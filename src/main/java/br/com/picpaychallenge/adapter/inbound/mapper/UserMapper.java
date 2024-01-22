@@ -7,6 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
+import java.util.Optional;
+
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
@@ -14,6 +16,9 @@ public interface UserMapper {
 
     User toUser(UserRequest userRequest);
     User toUser(UserEntity userEntity);
+    User toUser(Optional<UserEntity> optionalUserEntity);
 
     UserEntity toUserEntity(User user);
+
+
 }

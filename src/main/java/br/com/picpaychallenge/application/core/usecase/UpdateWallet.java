@@ -6,6 +6,7 @@ import br.com.picpaychallenge.application.core.enums.UserType;
 import br.com.picpaychallenge.application.core.exception.UserException;
 import br.com.picpaychallenge.application.core.exception.WalletException;
 import br.com.picpaychallenge.application.ports.outbound.WalletRepository;
+import br.com.picpaychallenge.application.ports.rest.HttpRequest;
 
 import java.math.BigDecimal;
 import java.util.UUID;
@@ -15,14 +16,16 @@ public class UpdateWallet {
     private final WalletRepository repository;
     private final FindUser findUser;
     private final FindWallet find;
+    private final HttpRequest httpRequest;
 
-    public UpdateWallet(WalletRepository repository, FindUser findUser, FindWallet find) {
+    public UpdateWallet(WalletRepository repository, FindUser findUser, FindWallet find, HttpRequest httpRequest) {
         this.repository = repository;
         this.findUser = findUser;
         this.find = find;
+        this.httpRequest = httpRequest;
     }
 
-    public Wallet transfer(UUID userId, BigDecimal transactionValue, UUID accountDestination) {
+    public Wallet transfer(UUID userId, BigDecimal transactionValue, UUID destinationAccount) {
         User user = findUser.byId(userId);
 
         validateClientToMakeTransaction(user);
@@ -30,7 +33,10 @@ public class UpdateWallet {
         Wallet wallet = find.byUserId(userId);
 
         balanceValidations(wallet.getBalance(), transactionValue);
-        //TODO CONTINUE FROM HERE
+
+        authorizeTransaction();
+
+
         return null;
     }
 
@@ -51,5 +57,9 @@ public class UpdateWallet {
         if (balance.compareTo(transactionValue) < 0) {
             throw new WalletException("You don't have enough balance to make this transaction, current balance: " + balance);
         }
+    }
+
+    private String authorizeTransaction(){
+        return httpRequest.getTransactionAuthorization();
     }
 }
