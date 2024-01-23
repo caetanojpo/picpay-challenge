@@ -22,6 +22,16 @@ public class Config {
     }
 
     @Bean
+    public FindUser findUser(UserRepository userRepository) {
+        return new FindUser(userRepository);
+    }
+
+    @Bean
+    public FindWallet findWallet(WalletRepository walletRepository) {
+        return new FindWallet(walletRepository);
+    }
+
+    @Bean
     UpdateWallet updateWallet(WalletRepository walletRepository, FindUser findUser, FindWallet findWallet, HttpRequest httpRequest) {
         return new UpdateWallet(walletRepository, findUser, findWallet, httpRequest);
     }

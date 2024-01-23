@@ -16,4 +16,8 @@ public class FindWallet {
     public Wallet byUserId(UUID userId){
         return repository.byUserId(userId);
     }
+
+    public Wallet byId(UUID id){
+        return repository.byId(id);
+    }
 }

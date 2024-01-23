@@ -3,6 +3,7 @@ package br.com.picpaychallenge.adapter.outbound.repository;
 import br.com.picpaychallenge.adapter.inbound.mapper.UserMapper;
 import br.com.picpaychallenge.adapter.outbound.cryptography.Argon2Password;
 import br.com.picpaychallenge.application.core.domain.User;
+import br.com.picpaychallenge.application.core.exception.EntityNotFoundException;
 import br.com.picpaychallenge.application.ports.outbound.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -30,6 +31,6 @@ public class UserEntityRepository implements UserRepository {
 
     @Override
     public User byId(UUID id) {
-        return UserMapper.INSTANCE.toUser(jpaRepository.findById(id));
+        return UserMapper.INSTANCE.toUser(jpaRepository.findById(id).orElseThrow(() -> new EntityNotFoundException(User.class.getSimpleName(), id)));
     }
 }

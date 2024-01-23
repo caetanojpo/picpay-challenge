@@ -8,6 +8,8 @@ import java.util.UUID;
 public interface WalletRepository {
     Wallet save(Wallet wallet);
 
+    Wallet byId(UUID id);
+
     Wallet byUserId(UUID userId);
 
     Wallet update(UUID userId, BigDecimal value);

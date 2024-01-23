@@ -2,6 +2,7 @@ package br.com.picpaychallenge.application.core.usecase;
 
 import br.com.picpaychallenge.application.core.domain.User;
 import br.com.picpaychallenge.application.core.domain.Wallet;
+import br.com.picpaychallenge.application.core.enums.TransactionType;
 import br.com.picpaychallenge.application.core.enums.UserType;
 import br.com.picpaychallenge.application.core.exception.UserException;
 import br.com.picpaychallenge.application.core.exception.WalletException;
@@ -26,18 +27,36 @@ public class UpdateWallet {
     }
 
     public Wallet transfer(UUID userId, BigDecimal transactionValue, UUID destinationAccount) {
+
         User user = findUser.byId(userId);
 
         validateClientToMakeTransaction(user);
 
-        Wallet wallet = find.byUserId(userId);
+        Wallet userWallet = find.byUserId(userId);
 
-        balanceValidations(wallet.getBalance(), transactionValue);
+        balanceValidations(userWallet.getBalance(), transactionValue);
 
-        authorizeTransaction();
+        Wallet destinationWallet = find.byId(destinationAccount);
+        try {
+            transaction(destinationWallet.getId(), TransactionType.CREDIT, transactionValue);
+            authorizeTransaction();
+        } catch (RuntimeException ex) {
+            transaction(userWallet.getId(), TransactionType.CREDIT, transactionValue);
+            transaction(destinationWallet.getId(), TransactionType.DEBIT, transactionValue);
+            throw new WalletException(ex.getMessage());
+        }
+        notifyViaEmail();
+        return destinationWallet;
+    }
 
-
-        return null;
+    public void transaction(UUID walletId, TransactionType transactionType, BigDecimal value) {
+        Wallet wallet = find.byId(walletId);
+        if (transactionType.equals(TransactionType.CREDIT)) {
+            wallet.setBalance(wallet.getBalance().add(value));
+        } else {
+            wallet.setBalance(wallet.getBalance().subtract(value));
+        }
+        repository.save(wallet);
     }
 
     private void validateClientToMakeTransaction(User user) {
@@ -59,7 +78,15 @@ public class UpdateWallet {
         }
     }
 
-    private String authorizeTransaction(){
-        return httpRequest.getTransactionAuthorization();
+    private void authorizeTransaction() {
+        if (!httpRequest.transactionValidations("/5794d450-d2e2-4412-8131-73d0293ac1cc").message().equals("Autorizado")) {
+            throw new WalletException("Unauthorized");
+        }
+    }
+
+    private void notifyViaEmail() {
+        if (!httpRequest.transactionValidations("/54dc2cf1-3add-45b5-b5a9-6bf7e7f1f4a6").message().equals(true)){
+            throw new WalletException("Notification failed");
+        }
     }
 }

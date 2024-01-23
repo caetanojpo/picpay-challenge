@@ -16,7 +16,6 @@ public interface UserMapper {
 
     User toUser(UserRequest userRequest);
     User toUser(UserEntity userEntity);
-    User toUser(Optional<UserEntity> optionalUserEntity);
 
     UserEntity toUserEntity(User user);
 
